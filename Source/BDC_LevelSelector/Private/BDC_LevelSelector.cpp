@@ -11,7 +11,7 @@ void FBDC_LevelSelectorModule::StartupModule()
 		FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 		
 		ToolbarExtender = MakeShareable(new FExtender);
-		ToolbarExtender->AddToolBarExtension("Play", EExtensionHook::After, nullptr, FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension));
+		ToolbarExtender->AddToolBarExtension("Settings", EExtensionHook::After, nullptr, FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension));
 		
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 	}
@@ -35,4 +35,5 @@ void FBDC_LevelSelectorModule::AddToolbarExtension(FToolBarBuilder& Builder)
 
 #undef LOCTEXT_NAMESPACE
 	
+
 IMPLEMENT_MODULE(FBDC_LevelSelectorModule, BDC_LevelSelector)
