@@ -5,39 +5,35 @@
 #include "Widgets/Images/SImage.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Editor.h"
-#include "Editor/EditorEngine.h"
 #include "FileHelpers.h"
+#include "Styling/AppStyle.h"
 
-FLevelSelectorItem::FLevelSelectorItem(const FAssetData& InAssetData): AssetData(InAssetData)
+FLevelSelectorItem::FLevelSelectorItem(const FAssetData& InAssetData) : AssetData(InAssetData)
 {
 	DisplayName = AssetData.AssetName.ToString();
 	PackagePath = AssetData.GetSoftObjectPath().GetLongPackageName();
-
-	ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
-		FName(*AssetData.GetSoftObjectPath().ToString()),
-		FVector2D(40, 40)
-	));
 }
-
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 {
+	DefaultLevelIcon = FAppStyle::GetBrush("LevelEditor.Tabs.Levels");
 	PopulateLevelList();
-	
+
 	ChildSlot
 	[
 		SNew(SBox)
 		.HeightOverride(48)
 		.MinDesiredWidth(128)
 		.MaxDesiredWidth(256)
+		.Padding(FMargin(4.0, 0.0))
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.VAlign(VAlign_Center)
-			.Padding(4.0f, 0.0f)
+			.Padding(0, 0, 8, 0)
 			[
 				SNew(STextBlock)
 				.Text(FText::FromString(TEXT("Level:")))
@@ -51,17 +47,10 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 				.OnGenerateWidget(this, &SLevelSelectorComboBox::OnGenerateComboWidget)
 				.OnSelectionChanged(this, &SLevelSelectorComboBox::OnSelectionChanged)
 				[
-					SNew(SBox)
-					.Padding(FMargin(4, 0))
+					SAssignNew(ComboBoxContentContainer, SBox)
+					.VAlign(VAlign_Center)
 					[
-						SNew(SHorizontalBox)
-						+ SHorizontalBox::Slot()
-						.AutoWidth()
-						[
-							(LevelComboBox.IsValid() && LevelComboBox->GetSelectedItem().IsValid())
-							? CreateSelectedItemWidget(LevelComboBox->GetSelectedItem())
-							: SNullWidget::NullWidget
-						]
+						SNew(STextBlock).Text(FText::FromString(TEXT("Select a Level...")))
 					]
 				]
 			]
@@ -70,18 +59,31 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 
 	FEditorDelegates::OnMapOpened.AddSP(this, &SLevelSelectorComboBox::HandleMapOpened);
 
-	if (GEditor && GEditor->GetEditorWorldContext().World())
-	{
-		RefreshSelection(GEditor->GetEditorWorldContext().World()->GetPathName());
-	}
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+	AssetRegistryModule.Get().OnFilesLoaded().AddSP(this, &SLevelSelectorComboBox::OnAssetRegistryFilesLoaded);
 }
 
 SLevelSelectorComboBox::~SLevelSelectorComboBox()
 {
-	if (FEditorDelegates::OnMapOpened.IsBoundToObject(this))
+	if (FModuleManager::Get().IsModuleLoaded("AssetRegistry"))
+	{
+		FAssetRegistryModule& AssetRegistryModule = FModuleManager::GetModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+		AssetRegistryModule.Get().OnFilesLoaded().RemoveAll(this);
+	}
+	if (FModuleManager::Get().IsModuleLoaded("MainFrame"))
 	{
 		FEditorDelegates::OnMapOpened.RemoveAll(this);
 	}
+}
+
+void SLevelSelectorComboBox::OnAssetRegistryFilesLoaded()
+{
+	if (GEditor && GEditor->GetEditorWorldContext().World())
+	{
+		RefreshSelection(GEditor->GetEditorWorldContext().World()->GetPathName());
+	}
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+	AssetRegistryModule.Get().OnFilesLoaded().RemoveAll(this);
 }
 
 void SLevelSelectorComboBox::RefreshSelection(const FString& MapPath)
@@ -95,15 +97,24 @@ void SLevelSelectorComboBox::RefreshSelection(const FString& MapPath)
 			if (LevelComboBox.IsValid())
 			{
 				LevelComboBox->SetSelectedItem(Item);
-				LevelComboBox->RefreshOptions();
+			}
+			if (ComboBoxContentContainer.IsValid())
+			{
+				ComboBoxContentContainer->SetContent(CreateLevelItemWidget(Item));
 			}
 			return;
 		}
 	}
-	
+
 	if(LevelComboBox.IsValid())
 	{
 		LevelComboBox->ClearSelection();
+	}
+	if (ComboBoxContentContainer.IsValid())
+	{
+		ComboBoxContentContainer->SetContent(
+			SNew(STextBlock).Text(FText::FromString(TEXT("Select a Level...")))
+		);
 	}
 }
 
@@ -112,11 +123,10 @@ void SLevelSelectorComboBox::PopulateLevelList()
 	LevelListSource.Empty();
 	
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-	TArray<FAssetData> AssetData;
+	TArray<FAssetData> AssetDataList;
+	AssetRegistryModule.Get().GetAssetsByClass(UWorld::StaticClass()->GetClassPathName(), AssetDataList);
 
-	AssetRegistryModule.Get().GetAssetsByClass(UWorld::StaticClass()->GetClassPathName(), AssetData);
-
-	for (const FAssetData& Data : AssetData)
+	for (const FAssetData& Data : AssetDataList)
 	{
 		if (Data.GetSoftObjectPath().GetLongPackageName().StartsWith(TEXT("/Game/")))
 		{
@@ -130,9 +140,9 @@ void SLevelSelectorComboBox::PopulateLevelList()
 	});
 }
 
-TSharedRef<SWidget> SLevelSelectorComboBox::OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem) const
+TSharedRef<SWidget> SLevelSelectorComboBox::OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem)
 {
-	return CreateSelectedItemWidget(InItem);
+	return CreateLevelItemWidget(InItem);
 }
 
 void SLevelSelectorComboBox::OnSelectionChanged(TSharedPtr<FLevelSelectorItem> InItem, ESelectInfo::Type SelectInfo)
@@ -141,20 +151,25 @@ void SLevelSelectorComboBox::OnSelectionChanged(TSharedPtr<FLevelSelectorItem> I
 	{
 		return;
 	}
-
 	if (InItem.IsValid())
 	{
-		const FString AssetPath = InItem->AssetData.GetSoftObjectPath().ToString();
-		FEditorFileUtils::LoadMap(AssetPath);
+		FEditorFileUtils::LoadMap(InItem->AssetData.GetSoftObjectPath().ToString());
 	}
 }
 
-TSharedRef<SWidget> SLevelSelectorComboBox::CreateSelectedItemWidget(TSharedPtr<FLevelSelectorItem> InItem) const
+TSharedRef<SWidget> SLevelSelectorComboBox::CreateLevelItemWidget(TSharedPtr<FLevelSelectorItem> InItem) const
 {
 	if (!InItem.IsValid())
 	{
-		return SNew(STextBlock).Text(FText::FromString(TEXT("Select a Level...")));
+		return SNew(STextBlock).Text(FText::FromString(TEXT("Invalid Level")));
 	}
+
+	const TSharedPtr<FSlateBrush> ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
+		FName(*InItem->AssetData.GetSoftObjectPath().ToString()),
+		FVector2D(40, 40)
+	));
+
+	const FSlateBrush* FinalBrush = ThumbnailBrush->GetResourceObject() != nullptr ? ThumbnailBrush.Get() : DefaultLevelIcon;
 	
 	return SNew(SHorizontalBox)
 		+ SHorizontalBox::Slot()
@@ -166,7 +181,7 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateSelectedItemWidget(TSharedPtr<
 			.HeightOverride(40)
 			[
 				SNew(SImage)
-				.Image(InItem->ThumbnailBrush.Get())
+				.Image(FinalBrush)
 			]
 		]
 		+ SHorizontalBox::Slot()
