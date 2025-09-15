@@ -13,7 +13,6 @@
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
 #include "Widgets/Input/SComboBox.h"
-#include "AssetData.h"
 
 struct FLevelSelectorItem
 {
@@ -42,7 +41,7 @@ public:
 
 private:
 	void PopulateLevelList();
-	TSharedRef<SWidget> OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem);
+	TSharedRef<SWidget> OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem) const;
 	void OnSelectionChanged(TSharedPtr<FLevelSelectorItem> InItem, ESelectInfo::Type SelectInfo);
 	TSharedRef<SWidget> CreateSelectedItemWidget(TSharedPtr<FLevelSelectorItem> InItem) const;
 	void HandleMapOpened(const FString& Filename, bool bAsTemplate);

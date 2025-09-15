@@ -7,21 +7,18 @@
 #include "Editor.h"
 #include "Editor/EditorEngine.h"
 #include "FileHelpers.h"
-#include "AssetToolsModule.h"
-#include "ThumbnailRendering/ThumbnailManager.h"
 
-FLevelSelectorItem::FLevelSelectorItem(const FAssetData& InAssetData)
-	: AssetData(InAssetData)
+FLevelSelectorItem::FLevelSelectorItem(const FAssetData& InAssetData): AssetData(InAssetData)
 {
 	DisplayName = AssetData.AssetName.ToString();
 	PackagePath = AssetData.GetSoftObjectPath().GetLongPackageName();
 
 	ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
-		AssetData.GetSoftObjectPath(),
-		FVector2D(40, 40),
-		FName(*AssetData.GetSoftObjectPath().ToString())
+		FName(*AssetData.GetSoftObjectPath().ToString()),
+		FVector2D(40, 40)
 	));
 }
+
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
@@ -133,7 +130,7 @@ void SLevelSelectorComboBox::PopulateLevelList()
 	});
 }
 
-TSharedRef<SWidget> SLevelSelectorComboBox::OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem)
+TSharedRef<SWidget> SLevelSelectorComboBox::OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem) const
 {
 	return CreateSelectedItemWidget(InItem);
 }
