@@ -21,7 +21,7 @@ struct FLevelSelectorItem
 	FAssetData AssetData;
 	TSharedPtr<FSlateBrush> ThumbnailBrush;
 
-	FLevelSelectorItem(const FAssetData& InAssetData);
+	explicit FLevelSelectorItem(const FAssetData& InAssetData);
 
 	static TSharedRef<FLevelSelectorItem> Create(const FAssetData& InAssetData)
 	{
@@ -36,7 +36,7 @@ public:
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
-	~SLevelSelectorComboBox();
+	virtual ~SLevelSelectorComboBox() override;
 	void RefreshSelection(const FString& MapPath);
 
 private:

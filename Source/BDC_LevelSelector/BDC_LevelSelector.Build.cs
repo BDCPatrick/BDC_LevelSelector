@@ -20,6 +20,7 @@ public class BDC_LevelSelector : ModuleRules
 			new string[]
 			{
 				"Core",
+				"InputCore"
 			}
 		);
 
