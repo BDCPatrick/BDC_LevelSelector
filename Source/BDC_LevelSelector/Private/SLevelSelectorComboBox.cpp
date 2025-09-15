@@ -24,10 +24,10 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 	ChildSlot
 	[
 		SNew(SBox)
-		.HeightOverride(48)
+		.Padding(FMargin(12.0, 2.0))
+		.HeightOverride(32)
 		.MinDesiredWidth(128)
 		.MaxDesiredWidth(256)
-		.Padding(FMargin(4.0, 0.0))
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot()
@@ -166,7 +166,7 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateLevelItemWidget(TSharedPtr<FLe
 
 	const TSharedPtr<FSlateBrush> ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
 		FName(*InItem->AssetData.GetSoftObjectPath().ToString()),
-		FVector2D(40, 40)
+		FVector2D(24, 24)
 	));
 
 	const FSlateBrush* FinalBrush = ThumbnailBrush->GetResourceObject() != nullptr ? ThumbnailBrush.Get() : DefaultLevelIcon;
@@ -177,8 +177,11 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateLevelItemWidget(TSharedPtr<FLe
 		.VAlign(VAlign_Center)
 		[
 			SNew(SBox)
-			.WidthOverride(40)
-			.HeightOverride(40)
+			.WidthOverride(24)
+			.HeightOverride(24)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			.Padding(0.0f, 2.0f)
 			[
 				SNew(SImage)
 				.Image(FinalBrush)
@@ -187,7 +190,7 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateLevelItemWidget(TSharedPtr<FLe
 		+ SHorizontalBox::Slot()
 		.FillWidth(1.0)
 		.VAlign(VAlign_Center)
-		.Padding(4.0f, 0.0f)
+		.Padding(4.0f, 2.0f)
 		[
 			SNew(STextBlock)
 			.Text(FText::FromString(InItem->DisplayName))

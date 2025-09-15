@@ -2,16 +2,26 @@
 #include "SLevelSelectorComboBox.h"
 #include "LevelEditor.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogBDCLevelSelector, All, All);
+
 #define LOCTEXT_NAMESPACE "FBDC_LevelSelectorModule"
 
 void FBDC_LevelSelectorModule::StartupModule()
 {
+	UE_LOG(LogBDCLevelSelector, Warning, TEXT("BDC_LevelSelectorModule::StartupModule() is called."));
+
 	if (!IsRunningCommandlet())
 	{
 		FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 		
 		ToolbarExtender = MakeShareable(new FExtender);
-		ToolbarExtender->AddToolBarExtension("Settings", EExtensionHook::After, nullptr, FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension));
+
+		ToolbarExtender->AddToolBarExtension(
+			"Play",
+			EExtensionHook::After, 
+			nullptr, 
+			FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension)
+		);
 		
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 	}
@@ -28,6 +38,8 @@ void FBDC_LevelSelectorModule::ShutdownModule()
 
 void FBDC_LevelSelectorModule::AddToolbarExtension(FToolBarBuilder& Builder)
 {
+	UE_LOG(LogBDCLevelSelector, Warning, TEXT("BDC_LevelSelectorModule::AddToolbarExtension() is called."));
+
 	Builder.AddWidget(
 		SAssignNew(LevelSelectorWidget, SLevelSelectorComboBox)
 	);
