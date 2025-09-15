@@ -7,7 +7,7 @@
   "Category": "BDC_Plugins",
   "CreatedBy": "BDC_Patrick",
   "CreatedByURL": "https://blackdevilcreations.de",
-  "DocsURL": "",
+  "DocsURL": "https://github.com/BDCPatrick/BDC_LevelSelector/wiki",
   "MarketplaceURL": "",
   "SupportURL": "",
   "CanContainContent": false,
@@ -21,4 +21,5 @@
       "LoadingPhase": "Default"
     }
   ]
+
 }
