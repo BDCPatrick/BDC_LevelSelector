@@ -1,11 +1,9 @@
 /* Copyright © beginning at 2025 - BlackDevilCreations
   * Author: Patrick Wenzel
   * All rights reserved.
-  * 
-  * This file and the corresponding Definition is part of a BlackDevilCreations project and may not be distributed, copied,
+  * * This file and the corresponding Definition is part of a BlackDevilCreations project and may not be distributed, copied,
   * or modified without prior written permission from BlackDevilCreations.
-  * 
-  * Unreal Engine and its associated trademarks are property of Epic Games, Inc.
+  * * Unreal Engine and its associated trademarks are property of Epic Games, Inc.
   * and are used with permission.
 */
 using UnrealBuildTool;
@@ -20,21 +18,27 @@ public class BDC_LevelSelector : ModuleRules
 			new string[]
 			{
 				"Core",
-				"InputCore"
+				"InputCore", "GameplayTags"
 			}
 		);
 
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"CoreUObject",
+				"Core",
+				"CoreUObject", 
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"EditorStyle",
+				"EditorWidgets",
 				"UnrealEd",
-				"LevelEditor", 
+				"PropertyEditor",
+				"GameplayTags",
+				"GameplayTagsEditor",
+				"ContentBrowser",
 				"AssetRegistry",
-				"Projects" 
+				"DeveloperSettings"
 			}
 		);
 	}

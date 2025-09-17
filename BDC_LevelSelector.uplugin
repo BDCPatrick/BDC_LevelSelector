@@ -10,7 +10,7 @@
   "DocsURL": "https://github.com/BDCPatrick/BDC_LevelSelector/wiki",
   "MarketplaceURL": "",
   "SupportURL": "",
-  "CanContainContent": false,
+  "CanContainContent": true,
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
   "Installed": false,
@@ -19,6 +19,12 @@
       "Name": "BDC_LevelSelector",
       "Type": "Editor",
       "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "GameplayTagsEditor",
+      "Enabled": true
     }
   ]
 }
