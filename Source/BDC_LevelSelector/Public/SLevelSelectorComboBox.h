@@ -53,6 +53,7 @@ private:
 	TSharedRef<SWidget> OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem);
 	void OnSelectionChanged(TSharedPtr<FLevelSelectorItem> InItem, ESelectInfo::Type SelectInfo);
 	TSharedRef<SWidget> CreateLevelItemWidget(const TSharedPtr<FLevelSelectorItem>& InItem);
+	TSharedRef<SWidget> CreateSelectedItemWidget(const TSharedPtr<FLevelSelectorItem>& InItem);
 	TSharedRef<SWidget> CreateTagSelectionWidget(const TSharedPtr<FLevelSelectorItem>& InItem);
 	void HandleMapOpened(const FString& Filename, bool bAsTemplate);
 	void OnAssetRegistryFilesLoaded();
