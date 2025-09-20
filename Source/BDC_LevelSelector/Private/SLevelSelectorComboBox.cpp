@@ -17,11 +17,13 @@
 #include "Widgets/SCompoundWidget.h"
 #include "Widgets/SWidget.h"
 #include "Widgets/Images/SImage.h"
+#include "Styling/SlateTypes.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SCheckBox.h"
 #include "Widgets/Input/SComboButton.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
+#include "Widgets/Input/SEditableTextBox.h"
 
 FLevelSelectorItem::FLevelSelectorItem(const FAssetData& InAssetData) : AssetData(InAssetData)
 {
@@ -39,19 +41,45 @@ bool FLevelSelectorItem::IsFavorite() const
     return false;
 }
 
-BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 {
     DefaultLevelIcon = FAppStyle::GetBrush("LevelEditor.Tabs.Levels");
     RefreshIconBrush = FAppStyle::GetBrush("Icons.Refresh");
 
-    // Load the favorite icons from the content folder
-    UTexture2D* TexTrue = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_True.Tex_MarkFav_True"));
-    UTexture2D* TexFalse = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_False.Tex_MarkFav_False"));
-    
-    FavoriteIconBrush = TexTrue ? new FSlateImageBrush(TexTrue, FVector2D(24, 24)) : FAppStyle::GetBrush("Icons.Star");
-    UnfavoriteIconBrush = TexFalse ? new FSlateImageBrush(TexFalse, FVector2D(24, 24)) : FAppStyle::GetBrush("Icons.EmptyStar");
+    // Load the favorite icons from the content folder and keep them resident to avoid checkerboard fallbacks
+    FavoriteIconTextureTrue = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_True.Tex_MarkFav_True"));
+    FavoriteIconTextureFalse = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_False.Tex_MarkFav_False"));
+
+    // Default fallbacks
+    FavoriteIconBrush = FAppStyle::GetBrush("Icons.Star");
+    UnfavoriteIconBrush = FAppStyle::GetBrush("Icons.EmptyStar");
+
+    if (FavoriteIconTextureTrue)
+    {
+        FavoriteIconTextureTrue->AddToRoot();
+        FavoriteIconTextureTrue->SetForceMipLevelsToBeResident(30.0f);
+        FavoriteIconTextureTrue->WaitForStreaming();
+
+        FavoriteOwnedBrush = MakeUnique<FSlateBrush>();
+        FavoriteOwnedBrush->SetResourceObject(FavoriteIconTextureTrue);
+        FavoriteOwnedBrush->ImageSize = FVector2D(24, 24);
+        FavoriteIconBrush = FavoriteOwnedBrush.Get();
+    }
+
+    if (FavoriteIconTextureFalse)
+    {
+        FavoriteIconTextureFalse->AddToRoot();
+        FavoriteIconTextureFalse->SetForceMipLevelsToBeResident(30.0f);
+        FavoriteIconTextureFalse->WaitForStreaming();
+
+        UnfavoriteOwnedBrush = MakeUnique<FSlateBrush>();
+        UnfavoriteOwnedBrush->SetResourceObject(FavoriteIconTextureFalse);
+        UnfavoriteOwnedBrush->ImageSize = FVector2D(24, 24);
+        UnfavoriteIconBrush = UnfavoriteOwnedBrush.Get();
+    }
+
+    HeaderItem = MakeShareable(new FLevelSelectorItem(FAssetData()));
 
     PopulateLevelList();
 
@@ -80,7 +108,8 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
              .OptionsSource(&LevelListSource)
              .OnGenerateWidget(this, &SLevelSelectorComboBox::OnGenerateComboWidget)
              .OnSelectionChanged(this, &SLevelSelectorComboBox::OnSelectionChanged)
-             .OnComboBoxOpening(this, &SLevelSelectorComboBox::OnComboBoxOpening) // WIRD BEIM ÖFFNEN AUFGERUFEN
+             .OnComboBoxOpening(this, &SLevelSelectorComboBox::OnComboBoxOpening)
+             .MaxListHeight(480.0f)
              [
                 SAssignNew(ComboBoxContentContainer, SBox)
                 .VAlign(VAlign_Center)
@@ -93,18 +122,35 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
           .AutoWidth()
           .HAlign(HAlign_Right)
           .VAlign(VAlign_Center)
-          .Padding(8.0f, 0.0f, 0.0f, 0.0f)
+          .Padding(FMargin(4, 0, 0, 0))
           [
              SNew(SBox)
              .WidthOverride(28)
              .HeightOverride(28)
              [
-                SNew(SButton)
-                .OnClicked(this, &SLevelSelectorComboBox::OnRefreshButtonClicked)
-                .ContentPadding(0)
+                SNew(SOverlay)
+                
+                +SOverlay::Slot()
+                .HAlign(HAlign_Fill)
+                .VAlign(VAlign_Fill)
+                [
+                  SNew(SButton)
+                  .OnClicked(this, &SLevelSelectorComboBox::OnRefreshButtonClicked)
+                  .ContentPadding(0)
+                   [
+                      SNew(STextBlock)
+                      .Text(FText::FromString(TEXT("")))
+                   ]
+                ]
+                +SOverlay::Slot()
+                .HAlign(HAlign_Center)
+                .VAlign(VAlign_Center)
+                .Padding(4.0f)
                 [
                    SNew(SImage)
                    .Image(RefreshIconBrush)
+                   .DesiredSizeOverride(FVector2D(20, 20))
+                   .Visibility(EVisibility::HitTestInvisible)
                 ]
              ]
           ]
@@ -138,10 +184,10 @@ SLevelSelectorComboBox::~SLevelSelectorComboBox()
        const FAssetRegistryModule& AssetRegistryModule = FModuleManager::GetModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
        AssetRegistryModule.Get().OnFilesLoaded().RemoveAll(this);
     }
-    if (FModuleManager::Get().IsModuleLoaded("MainFrame"))
-    {
-       FEditorDelegates::OnMapOpened.RemoveAll(this);
-    }
+    FEditorDelegates::OnMapOpened.RemoveAll(this);
+
+    FavoriteIconTextureTrue = nullptr;
+    FavoriteIconTextureFalse = nullptr;
 }
 
 void SLevelSelectorComboBox::OnAssetRegistryFilesLoaded()
@@ -241,7 +287,7 @@ void SLevelSelectorComboBox::EnsureSelectedCurrentLevel(bool bStrict)
 
 void SLevelSelectorComboBox::PopulateLevelList()
 {
-    LevelListSource.Empty();
+    AllLevels.Empty();
 
     const FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
     TArray<FAssetData> AssetDataList;
@@ -259,7 +305,7 @@ void SLevelSelectorComboBox::PopulateLevelList()
        {
           if (const FAssetData AssetData = AssetRegistryModule.Get().GetAssetByObjectPath(FavoritePath); AssetData.IsValid())
           {
-             LevelListSource.Add(FLevelSelectorItem::Create(AssetData));
+             AllLevels.Add(FLevelSelectorItem::Create(AssetData));
           }
        }
     }
@@ -270,7 +316,7 @@ void SLevelSelectorComboBox::PopulateLevelList()
        {
           TSharedRef<FLevelSelectorItem> NewItem = FLevelSelectorItem::Create(Data);
           bool bIsAlreadyInList = false;
-          for (const TSharedPtr<FLevelSelectorItem>& ExistingItem : LevelListSource)
+          for (const TSharedPtr<FLevelSelectorItem>& ExistingItem : AllLevels)
           {
              if (ExistingItem->PackagePath == NewItem->PackagePath)
              {
@@ -280,24 +326,21 @@ void SLevelSelectorComboBox::PopulateLevelList()
           }
           if (!bIsAlreadyInList)
           {
-             LevelListSource.Add(NewItem);
+             AllLevels.Add(NewItem);
           }
        }
     }
 
     SortLevelList();
 
-    if (LevelComboBox.IsValid())
-    {
-       LevelComboBox->RefreshOptions();
-    }
+    ApplyFilters();
 }
 
 void SLevelSelectorComboBox::SortLevelList()
 {
     if (const UBDC_LevelSelectorSettings* Settings = GetDefault<UBDC_LevelSelectorSettings>())
     {
-       LevelListSource.Sort([&](const TSharedPtr<FLevelSelectorItem>& A, const TSharedPtr<FLevelSelectorItem>& B)
+       AllLevels.Sort([&](const TSharedPtr<FLevelSelectorItem>& A, const TSharedPtr<FLevelSelectorItem>& B)
        {
           const FSoftObjectPath PathA = A->AssetData.GetSoftObjectPath();
           const FSoftObjectPath PathB = B->AssetData.GetSoftObjectPath();
@@ -313,7 +356,7 @@ void SLevelSelectorComboBox::SortLevelList()
     }
     else
     {
-       LevelListSource.Sort([](const TSharedPtr<FLevelSelectorItem>& A, const TSharedPtr<FLevelSelectorItem>& B)
+       AllLevels.Sort([](const TSharedPtr<FLevelSelectorItem>& A, const TSharedPtr<FLevelSelectorItem>& B)
        {
           return A->PackagePath < B->PackagePath;
        });
@@ -322,11 +365,65 @@ void SLevelSelectorComboBox::SortLevelList()
 
 TSharedRef<SWidget> SLevelSelectorComboBox::OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem)
 {
+    if (IsHeaderItem(InItem))
+    {
+        return SNew(SVerticalBox)
+        + SVerticalBox::Slot()
+        .AutoHeight()
+        .Padding(FMargin(4.0f))
+        [
+            SNew(SHorizontalBox)
+            + SHorizontalBox::Slot()
+            .FillWidth(1.0f)
+            .Padding(FMargin(0,0,4,0))
+            [
+                SAssignNew(SearchTextBoxWidget, SEditableTextBox)
+                .HintText(FText::FromString(TEXT("Search levels...")))
+                .Text(SearchTextFilter)
+                .OnTextChanged(this, &SLevelSelectorComboBox::OnSearchTextChanged)
+                .OnTextCommitted(this, &SLevelSelectorComboBox::OnSearchTextCommitted)
+                .MinDesiredWidth(160)
+            ]
+            + SHorizontalBox::Slot()
+            .AutoWidth()
+            .Padding(FMargin(0,0,4,0))
+            [
+                SAssignNew(FilterTagComboWidget, SGameplayTagCombo)
+                .OnTagChanged_Lambda([this](const FGameplayTag NewTag)
+                {
+                    OnFilterTagChanged(NewTag);
+                })
+                .Tag(SelectedFilterTag)
+                .Filter(FString())
+            ]
+            + SHorizontalBox::Slot()
+            .AutoWidth()
+            [
+                SNew(SButton)
+                .ButtonStyle(FAppStyle::Get(), "SimpleButton")
+                .OnClicked(this, &SLevelSelectorComboBox::OnClearFilterClicked)
+                .ToolTipText(FText::FromString(TEXT("Clear search and tag filter")))
+                [
+                    SNew(STextBlock).Text(FText::FromString(TEXT("X")))
+                ]
+            ]
+        ];
+    }
     return CreateLevelItemWidget(InItem);
 }
 
 void SLevelSelectorComboBox::OnSelectionChanged(TSharedPtr<FLevelSelectorItem> InItem, ESelectInfo::Type SelectInfo)
 {
+    if (IsHeaderItem(InItem))
+    {
+        // Never act on header row selection
+        if (LevelComboBox.IsValid())
+        {
+            LevelComboBox->ClearSelection();
+        }
+        return;
+    }
+
     if (SelectInfo != ESelectInfo::OnMouseClick && SelectInfo != ESelectInfo::OnKeyPress)
     {
        return;
@@ -344,11 +441,7 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateSelectedItemWidget(const TShar
        return SNew(STextBlock).Text(FText::FromString(TEXT("Invalid Level")));
     }
 
-    const TSharedPtr<FSlateBrush> ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
-       FName(*InItem->AssetData.GetSoftObjectPath().ToString()),
-       FVector2D(24, 24)
-    ));
-    const FSlateBrush* FinalBrush = ThumbnailBrush->GetResourceObject() != nullptr ? ThumbnailBrush.Get() : DefaultLevelIcon;
+    const FSlateBrush* FinalBrush = DefaultLevelIcon;
     
     const UBDC_LevelSelectorSettings* Settings = GetDefault<UBDC_LevelSelectorSettings>();
     FString TagString = TEXT("");
@@ -423,12 +516,7 @@ TSharedRef<SWidget> SLevelSelectorComboBox::CreateLevelItemWidget(const TSharedP
        return SNew(STextBlock).Text(FText::FromString(TEXT("Invalid Level")));
     }
 
-    const TSharedPtr<FSlateBrush> ThumbnailBrush = MakeShareable(new FSlateDynamicImageBrush(
-       FName(*InItem->AssetData.GetSoftObjectPath().ToString()),
-       FVector2D(24, 24)
-    ));
-
-    const FSlateBrush* FinalBrush = ThumbnailBrush->GetResourceObject() != nullptr ? ThumbnailBrush.Get() : DefaultLevelIcon;
+    const FSlateBrush* FinalBrush = DefaultLevelIcon;
 
     return SNew(SHorizontalBox)
        + SHorizontalBox::Slot()
@@ -616,18 +704,112 @@ FReply SLevelSelectorComboBox::OnShowInContentBrowserClicked(const TSharedPtr<FL
     if (InItem.IsValid())
     {
        const FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
-       TArray<FAssetData> AssetsToSelect;
-       AssetsToSelect.Add(InItem->AssetData);
-       ContentBrowserModule.Get().SyncBrowserToAssets(AssetsToSelect);
+        TArray<FAssetData> AssetsToSelect;
+        AssetsToSelect.Add(InItem->AssetData);
+        ContentBrowserModule.Get().SyncBrowserToAssets(AssetsToSelect);
 
-       if (LevelComboBox.IsValid())
-       {
-          LevelComboBox->SetIsOpen(false);
-       }
+        if (LevelComboBox.IsValid())
+        {
+            LevelComboBox->SetIsOpen(false);
+        }
 
-       const_cast<SLevelSelectorComboBox*>(this)->EnsureSelectedCurrentLevel(true);
+        const_cast<SLevelSelectorComboBox*>(this)->EnsureSelectedCurrentLevel(true);
     }
     return FReply::Handled();
 }
 
-END_SLATE_FUNCTION_BUILD_OPTIMIZATION
+bool SLevelSelectorComboBox::IsHeaderItem(const TSharedPtr<FLevelSelectorItem>& InItem) const
+{
+    return HeaderItem.IsValid() && InItem == HeaderItem;
+}
+
+FGameplayTag SLevelSelectorComboBox::GetItemTag(const TSharedPtr<FLevelSelectorItem>& InItem) const
+{
+    if (!InItem.IsValid())
+    {
+        return FGameplayTag();
+    }
+    if (const UBDC_LevelSelectorSettings* Settings = GetDefault<UBDC_LevelSelectorSettings>())
+    {
+        if (const FGameplayTag* Found = Settings->LevelTags.Find(InItem->AssetData.GetSoftObjectPath()))
+        {
+            return *Found;
+        }
+    }
+    return FGameplayTag();
+}
+
+void SLevelSelectorComboBox::ApplyFilters()
+{
+    const FString SearchLower = SearchTextFilter.ToString().ToLower();
+
+    LevelListSource.Empty();
+	
+    if (HeaderItem.IsValid())
+    {
+        LevelListSource.Add(HeaderItem);
+    }
+
+    for (const TSharedPtr<FLevelSelectorItem>& Item : AllLevels)
+    {
+        if (!Item.IsValid()) continue;
+
+        bool bPassSearch = true;
+        if (!SearchLower.IsEmpty())
+        {
+            bPassSearch = Item->DisplayName.ToLower().Contains(SearchLower);
+        }
+
+        bool bPassTag = true;
+        if (SelectedFilterTag.IsValid())
+        {
+            bPassTag = GetItemTag(Item) == SelectedFilterTag;
+        }
+
+        if (bPassSearch && bPassTag)
+        {
+            LevelListSource.Add(Item);
+        }
+    }
+
+    if (LevelComboBox.IsValid())
+    {
+        LevelComboBox->RefreshOptions();
+    }
+}
+
+void SLevelSelectorComboBox::OnSearchTextChanged(const FText& InText)
+{
+    SearchTextFilter = InText;
+    ApplyFilters();
+}
+
+void SLevelSelectorComboBox::OnSearchTextCommitted(const FText& InText, ETextCommit::Type CommitType)
+{
+    SearchTextFilter = InText;
+    ApplyFilters();
+}
+
+void SLevelSelectorComboBox::OnFilterTagChanged(FGameplayTag InTag)
+{
+    SelectedFilterTag = InTag;
+    ApplyFilters();
+}
+
+FReply SLevelSelectorComboBox::OnClearFilterClicked()
+{
+    SearchTextFilter = FText::GetEmpty();
+    SelectedFilterTag = FGameplayTag();
+
+    if (SearchTextBoxWidget.IsValid())
+    {
+        SearchTextBoxWidget->SetText(SearchTextFilter);
+    }
+    if (FilterTagComboWidget.IsValid())
+    {
+    	
+    }
+
+    ApplyFilters();
+    return FReply::Handled();
+}
