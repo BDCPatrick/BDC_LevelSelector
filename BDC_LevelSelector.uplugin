@@ -8,8 +8,8 @@
   "CreatedBy": "BDC_Patrick",
   "CreatedByURL": "https://blackdevilcreations.de",
   "DocsURL": "https://github.com/BDCPatrick/BDC_LevelSelector/wiki",
-  "MarketplaceURL": "",
-  "SupportURL": "",
+  "MarketplaceURL": "com.epicgames.launcher://ue/Fab/product/1ee8fe29-4f1f-41fe-8cd2-5176a62f2e1c",
+  "SupportURL": "https://discord.gg/sQmBKETDAm",
   "CanContainContent": true,
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
@@ -18,13 +18,10 @@
     {
       "Name": "BDC_LevelSelector",
       "Type": "Editor",
-      "LoadingPhase": "Default"
-    }
-  ],
-  "Plugins": [
-    {
-      "Name": "GameplayTagsEditor",
-      "Enabled": true
+      "LoadingPhase": "Default",
+      "PlatformAllowList": [
+        "Win64"
+      ]
     }
   ]
 }
