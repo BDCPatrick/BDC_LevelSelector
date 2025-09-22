@@ -14,7 +14,7 @@
 
 void UBDC_LevelSelectorSettings::SaveToProjectDefaultConfig()
 {
-	TryUpdateDefaultConfigFile(); // Replaced to not override all Default ini
+	TryUpdateDefaultConfigFile();
 }
 
 UBDC_LevelSelectorSettings::UBDC_LevelSelectorSettings()

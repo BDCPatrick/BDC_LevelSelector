@@ -45,5 +45,4 @@ public:
 	
 private:
 	void SaveToProjectDefaultConfig();
-
 };
