@@ -23,5 +23,11 @@
         "Win64"
       ]
     }
+  ],
+  "Plugins": [
+    { 
+      "Name": "GameplayTagsEditor", 
+      "Enabled": true
+    }
   ]
 }
