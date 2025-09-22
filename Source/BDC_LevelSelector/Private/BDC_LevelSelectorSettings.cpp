@@ -14,9 +14,7 @@
 
 void UBDC_LevelSelectorSettings::SaveToProjectDefaultConfig()
 {
-	const FString DefaultConfigFile = GetDefault<UBDC_LevelSelectorSettings>()->GetDefaultConfigFilename();
-	SaveConfig(CPF_Config, *DefaultConfigFile);
-	GConfig->Flush(false, *DefaultConfigFile);
+	TryUpdateDefaultConfigFile(); // Replaced to not override all Default ini
 }
 
 UBDC_LevelSelectorSettings::UBDC_LevelSelectorSettings()
