@@ -4,7 +4,11 @@
 
 a FREE plugin to add a level selector Combobox above the Viewport, listing all levels inside the Content browser recursively, for easy switching.
 
+# Branches
+Main branch: Stable Release Branch.
 
+Experimental branch: if available, this is an unstable branch with current fixes or new Features. Untested - use at own risk!
+# Links
 The Doc: https://github.com/BDCPatrick/BDC_LevelSelector/wiki
 
 Support: https://discord.gg/sQmBKETDAm
