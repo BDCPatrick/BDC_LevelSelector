@@ -17,23 +17,22 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 // ********** Begin Class UBDC_LevelSelectorSettings ***********************************************
-struct Z_Construct_UClass_UBDC_LevelSelectorSettings_Statics;
 BDC_LEVELSELECTOR_API UClass* Z_Construct_UClass_UBDC_LevelSelectorSettings_NoRegister();
 
-#define FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_INCLASS_NO_PURE_DECLS \
+#define FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUBDC_LevelSelectorSettings(); \
-	friend struct ::Z_Construct_UClass_UBDC_LevelSelectorSettings_Statics; \
+	friend struct Z_Construct_UClass_UBDC_LevelSelectorSettings_Statics; \
 	static UClass* GetPrivateStaticClass(); \
-	friend BDC_LEVELSELECTOR_API UClass* ::Z_Construct_UClass_UBDC_LevelSelectorSettings_NoRegister(); \
+	friend BDC_LEVELSELECTOR_API UClass* Z_Construct_UClass_UBDC_LevelSelectorSettings_NoRegister(); \
 public: \
 	DECLARE_CLASS2(UBDC_LevelSelectorSettings, UDeveloperSettings, COMPILED_IN_FLAGS(0 | CLASS_DefaultConfig | CLASS_Config), CASTCLASS_None, TEXT("/Script/BDC_LevelSelector"), Z_Construct_UClass_UBDC_LevelSelectorSettings_NoRegister) \
 	DECLARE_SERIALIZER(UBDC_LevelSelectorSettings) \
-	static constexpr const TCHAR* StaticConfigName() {return TEXT("Editor");} \
+	static const TCHAR* StaticConfigName() {return TEXT("Editor");} \
 
 
 
-#define FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_ENHANCED_CONSTRUCTORS \
+#define FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_ENHANCED_CONSTRUCTORS \
 	/** Deleted move- and copy-constructors, should never be used */ \
 	UBDC_LevelSelectorSettings(UBDC_LevelSelectorSettings&&) = delete; \
 	UBDC_LevelSelectorSettings(const UBDC_LevelSelectorSettings&) = delete; \
@@ -43,12 +42,12 @@ public: \
 	NO_API virtual ~UBDC_LevelSelectorSettings();
 
 
-#define FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_18_PROLOG
-#define FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_GENERATED_BODY \
+#define FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_18_PROLOG
+#define FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_INCLASS_NO_PURE_DECLS \
-	FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_ENHANCED_CONSTRUCTORS \
+	FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_INCLASS_NO_PURE_DECLS \
+	FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h_21_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -58,6 +57,6 @@ class UBDC_LevelSelectorSettings;
 // ********** End Class UBDC_LevelSelectorSettings *************************************************
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID FID_UE_Projects_Plugin_Builder_5_7_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h
+#define CURRENT_FILE_ID FID_UE_Projects_LoH_TheTavern_Plugins_BDC_LevelSelector_Source_BDC_LevelSelector_Public_BDC_LevelSelectorSettings_h
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

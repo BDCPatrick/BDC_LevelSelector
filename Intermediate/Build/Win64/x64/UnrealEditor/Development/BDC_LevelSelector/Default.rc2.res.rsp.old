@@ -2,7 +2,7 @@
 /D_WIN64
 /l 0x409
 /I "."
-/I "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/INCLUDE"
+/I "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/INCLUDE"
 /I "C:/Program Files (x86)/Windows Kits/10/include/10.0.22621.0/ucrt"
 /I "C:/Program Files (x86)/Windows Kits/10/include/10.0.22621.0/shared"
 /I "C:/Program Files (x86)/Windows Kits/10/include/10.0.22621.0/um"
@@ -24,12 +24,13 @@
 /D_UNICODE
 /D__UNREAL__
 /DIS_MONOLITHIC=0
-/DIS_MERGEDMODULES=0
+/DUE_MERGED_MODULES=0
 /DWITH_ENGINE=1
 /DWITH_UNREAL_DEVELOPER_TOOLS=1
 /DWITH_UNREAL_TARGET_DEVELOPER_TOOLS=1
 /DWITH_APPLICATION_CORE=1
 /DWITH_COREUOBJECT=1
+/DUE_WITH_CONSTINIT_UOBJECT=0
 /DUE_TRACE_ENABLED=1
 /DUE_TRACE_FORCE_ENABLED=0
 /DWITH_VERSE=1
@@ -59,12 +60,13 @@
 /DWITH_CEF3=1
 /DWITH_LIVE_CODING=1
 /DWITH_CPP_MODULES=0
-/DWITH_CPP_COROUTINES=0
 /DWITH_PROCESS_PRIORITY_CONTROL=0
+/DUE_DEFINE_FORCEINLINE_HINT_TO_INLINE=0
 /DUBT_MODULE_MANIFEST="UnrealEditor.modules"
 /DUBT_MODULE_MANIFEST_DEBUGGAME="UnrealEditor-Win64-DebugGame.modules"
 /DUBT_COMPILED_PLATFORM=Win64
 /DUBT_COMPILED_TARGET=Editor
+/DUBT_COMPILED_ARCHITECTURE=x64
 /DUE_APP_NAME="UnrealEditor"
 /DUE_WARNINGS_AS_ERRORS=0
 /DFORCE_ANSI_ALLOCATOR=0
@@ -72,8 +74,9 @@
 /DUSE_MALLOC_BINNED3=0
 /DNDIS_MINIPORT_MAJOR_VERSION=0
 /DWIN32=1
-/D_WIN32_WINNT=0x0601
-/DWINVER=0x0601
+/D_WIN32_WINNT=0x0A00
+/DWINVER=0x0A00
+/DNTDDI_VERSION=0x0A000000
 /DPLATFORM_WINDOWS=1
 /DPLATFORM_MICROSOFT=1
 /DOVERRIDE_PLATFORM_HEADER_NAME=Windows
@@ -86,5 +89,5 @@
 /DBUILD_ICON_FILE_NAME="\"..\\Build\\Windows\\Resources\\Default.ico\""
 /DPROJECT_COPYRIGHT_STRING="Fill out your copyright notice in the Description page of Project Settings."
 /DPROJECT_PRODUCT_IDENTIFIER=Plugin_Builder
-/fo "G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Default.rc2.res"
+/fo "G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Default.rc2.res"
 "../Build/Windows/Resources/Default.rc2"

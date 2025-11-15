@@ -20,7 +20,7 @@
 /ALTERNATENAME:__imp___std_init_once_complete=__imp_InitOnceComplete
 /DELAYLOAD:"d3d12.dll"
 /DELAYLOAD:"DBGHELP.DLL"
-/LIBPATH:"C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/lib/x64"
+/LIBPATH:"C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/lib/x64"
 /LIBPATH:"C:/Program Files (x86)/Windows Kits/10/lib/10.0.22621.0/ucrt/x64"
 /LIBPATH:"C:/Program Files (x86)/Windows Kits/10/lib/10.0.22621.0/um/x64"
 /NODEFAULTLIB:"LIBCMT"
@@ -36,12 +36,12 @@
 /FUNCTIONPADMIN:6
 /NOIMPLIB
 /NOEXP
-"G:/UE_Projects/Plugin_Builder_5-6/Intermediate/Build/Win64/x64/Plugin_BuilderEditor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.InclOrderUnreal5_3.h.obj"
-"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Module.BDC_LevelSelector.cpp.obj"
-"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/BDC_LevelSelector.cpp.obj"
-"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/BDC_LevelSelectorSettings.cpp.obj"
-"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/SLevelSelectorComboBox.cpp.obj"
-"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Default.rc2.res"
+"G:/UE_Projects/Plugin_Builder_5-7/Intermediate/Build/Win64/x64/Plugin_BuilderEditor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Module.BDC_LevelSelector.cpp.obj"
+"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/BDC_LevelSelector.cpp.obj"
+"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/BDC_LevelSelectorSettings.cpp.obj"
+"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/SLevelSelectorComboBox.cpp.obj"
+"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Intermediate/Build/Win64/x64/UnrealEditor/Development/BDC_LevelSelector/Default.rc2.res"
 "../Intermediate/Build/Win64/x64/UnrealEditor/Development/Core/UnrealEditor-Core.lib"
 "../Intermediate/Build/Win64/x64/UnrealEditor/Development/CoreUObject/UnrealEditor-CoreUObject.lib"
 "../Intermediate/Build/Win64/x64/UnrealEditor/Development/Engine/UnrealEditor-Engine.lib"
@@ -82,6 +82,6 @@
 "synchronization.lib"
 "dwmapi.lib"
 "imm32.lib"
-/OUT:"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Binaries/Win64/UnrealEditor-BDC_LevelSelector.dll"
-/PDB:"G:/UE_Projects/Plugin_Builder_5-6/Plugins/BDC_LevelSelector/Binaries/Win64/UnrealEditor-BDC_LevelSelector.pdb"
+/OUT:"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Binaries/Win64/UnrealEditor-BDC_LevelSelector.dll"
+/PDB:"G:/UE_Projects/Plugin_Builder_5-7/Plugins/BDC_LevelSelector/Binaries/Win64/UnrealEditor-BDC_LevelSelector.pdb"
 /ignore:4078
