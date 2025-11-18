@@ -11,4 +11,4 @@ Experimental branch: if available, this is an unstable branch with current fixes
 # Links
 The Doc: https://github.com/BDCPatrick/BDC_LevelSelector/wiki
 
-Support: https://discord.gg/sQmBKETDAm
+Support: [Level Selector Discord](https://discord.gg/sQmBKETDAm)
