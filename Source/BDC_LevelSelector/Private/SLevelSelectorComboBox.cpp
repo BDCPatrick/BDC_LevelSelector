@@ -56,15 +56,10 @@ void SLevelSelectorComboBox::Construct(const FArguments& InArgs)
 {
     DefaultLevelIcon = FAppStyle::GetBrush("LevelEditor.Tabs.Levels");
     RefreshIconBrush = FAppStyle::GetBrush("Icons.Refresh");
-
-    // Load the favorite icons from the content folder and keep them resident to avoid checkerboard fallbacks
     FavoriteIconTextureTrue = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_True.Tex_MarkFav_True"));
     FavoriteIconTextureFalse = LoadObject<UTexture2D>(nullptr, TEXT("/BDC_LevelSelector/Tex_MarkFav_False.Tex_MarkFav_False"));
-
-    // Default fallbacks
     FavoriteIconBrush = FAppStyle::GetBrush("Icons.Star");
     UnfavoriteIconBrush = FAppStyle::GetBrush("Icons.EmptyStar");
-
     if (FavoriteIconTextureTrue)
     {
         FavoriteIconTextureTrue->AddToRoot();
@@ -426,7 +421,6 @@ void SLevelSelectorComboBox::OnSelectionChanged(TSharedPtr<FLevelSelectorItem> I
 {
     if (IsHeaderItem(InItem))
     {
-        // Never act on header row selection
         if (LevelComboBox.IsValid())
         {
             LevelComboBox->ClearSelection();

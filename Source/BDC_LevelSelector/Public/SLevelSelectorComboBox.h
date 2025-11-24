@@ -50,7 +50,6 @@ public:
 	virtual ~SLevelSelectorComboBox() override;
 
 private:
-	// Data population and selection
 	void PopulateLevelList();
 	void RefreshSelection(const FString& MapPath, bool bStrict = true);
 	void SortLevelList();
@@ -59,7 +58,6 @@ private:
 	void HandleMapOpened(const FString& Filename, bool bAsTemplate);
 	void OnAssetRegistryFilesLoaded();
 
-	// Combo/list item generation and interactions
 	TSharedRef<SWidget> OnGenerateComboWidget(TSharedPtr<FLevelSelectorItem> InItem);
 	void OnSelectionChanged(TSharedPtr<FLevelSelectorItem> InItem, ESelectInfo::Type SelectInfo);
 	TSharedRef<SWidget> CreateLevelItemWidget(const TSharedPtr<FLevelSelectorItem>& InItem);
@@ -68,7 +66,6 @@ private:
 	void OnFavoriteCheckboxChanged(ECheckBoxState NewState, TSharedPtr<FLevelSelectorItem> InItem);
 	void OnTagChanged(const TSharedPtr<FLevelSelectorItem>& InItem, FGameplayTag NewTag);
 
-	// Filtering header and handlers
 	void ApplyFilters();
 	bool IsHeaderItem(const TSharedPtr<FLevelSelectorItem>& InItem) const;
 	FGameplayTag GetItemTag(const TSharedPtr<FLevelSelectorItem>& InItem) const;
@@ -77,16 +74,13 @@ private:
 	void OnFilterTagChanged(FGameplayTag InTag);
 	FReply OnClearFilterClicked();
 
-	// Buttons
 	FReply OnRefreshButtonClicked();
 	FReply OnShowInContentBrowserClicked(const TSharedPtr<FLevelSelectorItem>& InItem) const;
 
-	// Data sources
 	TArray<TSharedPtr<FLevelSelectorItem>> AllLevels;
 	TArray<TSharedPtr<FLevelSelectorItem>> LevelListSource;
 	TSharedPtr<FLevelSelectorItem> HeaderItem;
 
-	// Widgets
 	TSharedPtr<SComboBox<TSharedPtr<FLevelSelectorItem>>> LevelComboBox;
 	TSharedPtr<SBox> ComboBoxContentContainer;
 	TSharedPtr<class SEditableTextBox> SearchTextBoxWidget;

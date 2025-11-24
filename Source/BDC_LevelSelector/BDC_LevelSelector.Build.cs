@@ -38,7 +38,8 @@ public class BDC_LevelSelector : ModuleRules
 				"GameplayTagsEditor",
 				"ContentBrowser",
 				"AssetRegistry",
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"LevelEditor"
 			}
 		);
 	}
