@@ -65,8 +65,6 @@ void FBDC_LevelSelectorModule::ShutdownModule()
 #pragma region Toolbar Extension
 void FBDC_LevelSelectorModule::AddToolbarExtension(FToolBarBuilder& Builder)
 {
-	UE_LOG(LogBDCLevelSelector, Warning, TEXT("BDC_LevelSelectorModule::AddToolbarExtension() is called."));
-
 	Builder.AddWidget(
 		SAssignNew(LevelSelectorWidget, SLevelSelectorComboBox)
 	);
