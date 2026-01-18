@@ -21,10 +21,9 @@ DEFINE_LOG_CATEGORY_STATIC(LogBDCLevelSelector, All, All);
 #pragma region Module Lifecycle
 void FBDC_LevelSelectorModule::StartupModule()
 {
-	UE_LOG(LogBDCLevelSelector, Warning, TEXT("BDC_LevelSelectorModule::StartupModule() is called."));
-
 	if (!IsRunningCommandlet())
 	{
+		UE_LOG(LogBDCLevelSelector, Warning, TEXT("BDC_LevelSelectorModule::StartupModule() is called."));
 		FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 		ToolbarExtender = MakeShareable(new FExtender);
 		ToolbarExtender->AddToolBarExtension("Play",EExtensionHook::After, nullptr, FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension));
@@ -111,4 +110,4 @@ void FBDC_LevelSelectorModule::OnMapOpened(const FString& Filename, bool bAsTemp
 #undef LOCTEXT_NAMESPACE
 	
 
-IMPLEMENT_MODULE(FBDC_LevelSelectorModule, BDC_LevelSelector)
+IMPLEMENT_MODULE(FBDC_LevelSelectorModule, BDC_LevelSelector);
