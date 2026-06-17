@@ -14,7 +14,10 @@
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
   "Installed": false,
-  "EngineVersion": "5.7",
+  "EngineVersion": "5.8",
+  "SupportedTargetPlatforms": [
+    "Win64"
+  ],
   "Modules": [
     {
       "Name": "BDC_LevelSelector",
