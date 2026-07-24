@@ -29,7 +29,7 @@ void FBDC_LevelSelectorModule::StartupModule()
 		ToolbarExtender->AddToolBarExtension("Play",EExtensionHook::After, nullptr, FToolBarExtensionDelegate::CreateRaw(this, &FBDC_LevelSelectorModule::AddToolbarExtension));
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 		FEditorDelegates::OnMapOpened.AddRaw(this, &FBDC_LevelSelectorModule::OnMapOpened);
-		FCoreDelegates::OnPostEngineInit.AddRaw(this, &FBDC_LevelSelectorModule::OnPostEngineInit);
+		FCoreDelegates::GetOnPostEngineInit().AddRaw(this, &FBDC_LevelSelectorModule::OnPostEngineInit);
 	}
 }
 
@@ -41,7 +41,7 @@ void FBDC_LevelSelectorModule::ShutdownModule()
 		LevelEditorModule.GetToolBarExtensibilityManager()->RemoveExtender(ToolbarExtender);
 	}
 	FEditorDelegates::OnMapOpened.RemoveAll(this);
-	FCoreDelegates::OnPostEngineInit.RemoveAll(this);
+	FCoreDelegates::GetOnPostEngineInit().RemoveAll(this);
 
 	if (OverlayWidget.IsValid())
 	{
